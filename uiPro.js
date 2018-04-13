@@ -3,9 +3,9 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const nodeModuleDir = path.resolve(__dirname, 'node_module')
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/index.js'),
+  entry: path.resolve(__dirname, 'app/component/index.js'),
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'QUI.js',
     library: 'QUI',
     libraryTarget: 'window'
@@ -19,8 +19,8 @@ module.exports = {
         parallel: true,
         sourceMap: true,
         uglifyOptions: {
-          compress:{
-            drop_console:true
+          compress: {
+            drop_console: true
           },
           output: {
             comments: false
@@ -34,21 +34,21 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         use: ['babel-loader'],
-        include: [path.resolve(__dirname, 'src')],
+        include: [path.resolve(__dirname, 'app')],
         exclude: [nodeModuleDir]
       },
       {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader?minimize=true&modules&localIdentName=_[local]',
+          'css-loader?minimize=true&modules&localIdentName=_[local]_[hash:base64:5]',
           { loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              config: { path: path.resolve(__dirname, 'postcss.config.js') }
+              config: { path: path.resolve(__dirname, 'dev/postcss.config.js') }
             }
           }],
-        include: [path.resolve(__dirname, 'src')],
+        include: [path.resolve(__dirname, 'app')],
         exclude: [nodeModuleDir]
       }
     ]

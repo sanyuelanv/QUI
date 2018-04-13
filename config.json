@@ -1,0 +1,12 @@
+{
+  "routers":[
+    {
+      "name":"home",
+      "template":"index"
+    }
+  ],
+  "consoleConfig":false,
+  "netWork":{
+    "port":"8080"
+  }
+}

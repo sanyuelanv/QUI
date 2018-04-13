@@ -5,7 +5,6 @@ import ScrollView from './container/scrollView'
 import ListView from './container/listView'
 import LoadIcon from './base/icon/loadIcon'
 import Button from './base/button'
-console.log(1)
 export {
   App,
   View,
