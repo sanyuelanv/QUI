@@ -1,3 +1,19 @@
+# 安装 & 使用 
+```
+npm i save sanyuequi
+```
+
+```
+import { 
+  App,
+  View,
+  Text,
+  Button,
+  LoadIcon,
+  ScrollView,
+  ListView } from 'sanyuequi'
+```
+
 # 组件说明
 ## View组件
 ----
