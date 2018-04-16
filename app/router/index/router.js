@@ -1,15 +1,14 @@
 'use strict'
-import { Text, View } from '../../component/index'
+import { Text, View, Button, ScrollView } from '../../component/index'
 import style from './css.css'
 class Index extends React.Component {
   render () {
     return (
-      <View className={ style.container } >
+      <ScrollView className={ style.container } mustScroll={true}>
         <View tap={() => { console.log(1) }} >
           Hello world
-          <View tap={() => { console.log(2) }} tapStopPropagation={ true }>点击</View>
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }

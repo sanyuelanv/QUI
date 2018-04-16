@@ -12,10 +12,10 @@
 
     const _elementStyle = document.createElement('div').style
     const _vendor = (function () {
-      let vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT'],
-        transform,
-        i = 0,
-        l = vendors.length
+      const vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT']
+      let transform
+      let i = 0
+      const l = vendors.length
 
       for (; i < l; i++) {
         transform = vendors[i] + 'ransform'
@@ -32,32 +32,20 @@
     }
 
     me.getTime = Date.now || function getTime () { return new Date().getTime() }
-
-    me.extend = function (target, obj) {
-      for (const i in obj) {
-        target[i] = obj[i]
-      }
-    }
-
-    me.addEvent = function (el, type, fn, capture) {
-      el.addEventListener(type, fn, !!capture)
-    }
-
-    me.removeEvent = function (el, type, fn, capture) {
-      el.removeEventListener(type, fn, !!capture)
-    }
+    me.extend = function (target, obj) { for (const i in obj) { target[i] = obj[i] } }
+    me.addEvent = function (el, type, fn, capture) { el.addEventListener(type, fn, !!capture) }
+    me.removeEvent = function (el, type, fn, capture) { el.removeEventListener(type, fn, !!capture) }
 
     me.prefixPointerEvent = function (pointerEvent) {
       return window.MSPointerEvent
         ? 'MSPointer' + pointerEvent.charAt(7).toUpperCase() + pointerEvent.substr(8)
         : pointerEvent
     }
-
     me.momentum = function (current, start, time, lowerMargin, wrapperSize, deceleration) {
-      let distance = current - start,
-        speed = Math.abs(distance) / time,
-        destination,
-        duration
+      let distance = current - start
+      const speed = Math.abs(distance) / time
+      let destination
+      let duration
 
       deceleration = deceleration === undefined ? 0.0006 : deceleration
 
@@ -80,9 +68,7 @@
         duration: duration
       }
     }
-
     const _transform = _prefixStyle('transform')
-
     me.extend(me, {
       hasTransform: _transform !== false,
       hasPerspective: _prefixStyle('perspective') in _elementStyle,
@@ -90,36 +76,15 @@
       hasPointer: !!(window.PointerEvent || window.MSPointerEvent), // IE10 is prefixed
       hasTransition: _prefixStyle('transition') in _elementStyle
     })
-
-    /*
-	This should find all Android browsers lower than build 535.19 (both stock browser and webview)
-	- galaxy S2 is ok
-    - 2.3.6 : `AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1`
-    - 4.0.4 : `AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30`
-   - galaxy S3 is badAndroid (stock brower, webview)
-     `AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30`
-   - galaxy S4 is badAndroid (stock brower, webview)
-     `AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30`
-   - galaxy S5 is OK
-     `AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36 (Chrome/)`
-   - galaxy S6 is OK
-     `AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.36 (Chrome/)`
-  */
     me.isBadAndroid = (function () {
       const appVersion = window.navigator.appVersion
       // Android browser is not a chrome browser.
       if (/Android/.test(appVersion) && !(/Chrome\/\d/.test(appVersion))) {
         const safariVersion = appVersion.match(/Safari\/(\d+.\d)/)
-        if (safariVersion && typeof safariVersion === 'object' && safariVersion.length >= 2) {
-          return parseFloat(safariVersion[1]) < 535.19
-        }
-        else {
-          return true
-        }
+        if (safariVersion && typeof safariVersion === 'object' && safariVersion.length >= 2) { return parseFloat(safariVersion[1]) < 535.19 }
+        else { return true }
       }
-      else {
-        return false
-      }
+      else { return false }
     })()
 
     me.extend(me.style = {}, {
@@ -156,8 +121,8 @@
     }
 
     me.offset = function (el) {
-      let left = -el.offsetLeft,
-        top = -el.offsetTop
+      let left = -el.offsetLeft
+      let top = -el.offsetTop
 
       // jshint -W084
       while (el = el.offsetParent) {
@@ -240,11 +205,11 @@
       elastic: {
         style: '',
         fn: function (k) {
-          let f = 0.22,
-            e = 0.4
+          const f = 0.22
+          const e = 0.4
 
           if (k === 0) { return 0 }
-          if (k == 1) { return 1 }
+          if (k === 1) { return 1 }
 
           return (e * Math.pow(2, -10 * k) * Math.sin((k - f / 4) * (2 * Math.PI) / f) + 1)
         }
@@ -260,8 +225,8 @@
     }
 
     me.click = function (e) {
-      let target = e.target,
-        ev
+      const target = e.target
+      let ev
 
       if (!(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName)) {
         // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/initMouseEvent
@@ -293,7 +258,7 @@
       else if (eventPassthrough === 'horizontal') {
         touchAction = 'pan-x'
       }
-      if (addPinch && touchAction != 'none') {
+      if (addPinch && touchAction !== 'none') {
         // add pinch-zoom support if the browser supports it, but if not (eg. Chrome <55) do nothing
         touchAction += ' pinch-zoom'
       }
@@ -325,17 +290,11 @@
   function IScroll (el, options) {
     this.wrapper = typeof el === 'string' ? document.querySelector(el) : el
     this.scroller = this.wrapper.children[0]
-    this.scrollerStyle = this.scroller.style		// cache style for better performance
-
+    this.scrollerStyle = this.scroller.style
     this.options = {
-
       resizeScrollbars: true,
-
       mouseWheelSpeed: 20,
-
       snapThreshold: 0.334,
-
-      // INSERT POINT: OPTIONS
       disablePointer: !utils.hasPointer,
       disableTouch: utils.hasPointer || !utils.hasTouch,
       disableMouse: utils.hasPointer || utils.hasTouch,
@@ -344,14 +303,11 @@
       scrollY: true,
       directionLockThreshold: 5,
       momentum: true,
-
       bounce: true,
       bounceTime: 600,
       bounceEasing: '',
-
       preventDefault: true,
       preventDefaultException: { tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ },
-
       HWCompositing: true,
       useTransition: true,
       useTransform: true,
@@ -363,44 +319,31 @@
       this.options[i] = options[i]
     }
 
-    // Normalize options
     this.translateZ = this.options.HWCompositing && utils.hasPerspective ? ' translateZ(0)' : ''
     this.options.useTransition = utils.hasTransition && this.options.useTransition
     this.options.useTransform = utils.hasTransform && this.options.useTransform
-
     this.options.eventPassthrough = this.options.eventPassthrough === true ? 'vertical' : this.options.eventPassthrough
     this.options.preventDefault = !this.options.eventPassthrough && this.options.preventDefault
-
-    // If you want eventPassthrough I have to lock one of the axes
-    this.options.scrollY = this.options.eventPassthrough == 'vertical' ? false : this.options.scrollY
-    this.options.scrollX = this.options.eventPassthrough == 'horizontal' ? false : this.options.scrollX
-
-    // With eventPassthrough we also need lockDirection mechanism
+    this.options.scrollY = this.options.eventPassthrough === 'vertical' ? false : this.options.scrollY
+    this.options.scrollX = this.options.eventPassthrough === 'horizontal' ? false : this.options.scrollX
     this.options.freeScroll = this.options.freeScroll && !this.options.eventPassthrough
     this.options.directionLockThreshold = this.options.eventPassthrough ? 0 : this.options.directionLockThreshold
-
     this.options.bounceEasing = typeof this.options.bounceEasing === 'string' ? utils.ease[this.options.bounceEasing] || utils.ease.circular : this.options.bounceEasing
-
     this.options.resizePolling = this.options.resizePolling === undefined ? 60 : this.options.resizePolling
-
-    if (this.options.tap === true) {
-      this.options.tap = 'tap'
-    }
-
-    // https://github.com/cubiq/iscroll/issues/1029
+    if (this.options.tap === true) { this.options.tap = 'tap' }
     if (!this.options.useTransition && !this.options.useTransform) {
       if (!(/relative|absolute/i).test(this.scrollerStyle.position)) {
         this.scrollerStyle.position = 'relative'
       }
     }
 
-    if (this.options.shrinkScrollbars == 'scale') {
+    if (this.options.shrinkScrollbars === 'scale') {
       this.options.useTransition = false
     }
 
     this.options.invertWheelDirection = this.options.invertWheelDirection ? -1 : 1
 
-    if (this.options.probeType == 3) {
+    if (this.options.probeType === 3) {
       this.options.useTransition = false
     }
 
@@ -427,35 +370,21 @@
 
     _init: function () {
       this._initEvents()
-
-      if (this.options.scrollbars || this.options.indicators) {
-        this._initIndicators()
-      }
-
-      if (this.options.mouseWheel) {
-        this._initWheel()
-      }
-
-      if (this.options.snap) {
-        this._initSnap()
-      }
-
-      if (this.options.keyBindings) {
-        this._initKeys()
-      }
-
-      // INSERT POINT: _init
+      if (this.options.scrollbars || this.options.indicators) { this._initIndicators() }
+      if (this.options.mouseWheel) { this._initWheel() }
+      if (this.options.snap) { this._initSnap() }
+      if (this.options.keyBindings) { this._initKeys() }
     },
 
     destroy: function () {
       this._initEvents(true)
       clearTimeout(this.resizeTimeout)
- 		this.resizeTimeout = null
+      this.resizeTimeout = null
       this._execEvent('destroy')
     },
 
     _transitionEnd: function (e) {
-      if (e.target != this.scroller || !this.isInTransition) {
+      if (e.target !== this.scroller || !this.isInTransition) {
         return
       }
 
@@ -467,37 +396,16 @@
     },
 
     _start: function (e) {
-      e.stopPropagation()
-      // React to left mouse button only
-      if (utils.eventType[e.type] != 1) {
-		  // for button property
-		  // http://unixpapa.com/js/mouse.html
-		  let button
-	    if (!e.which) {
-	      /* IE case */
-	      button = (e.button < 2) ? 0
-	               : ((e.button == 4) ? 1 : 2)
-	    }
-        else {
-	      /* All others */
-	      button = e.button
-	    }
-        if (button !== 0) {
-          return
-        }
+      if (utils.eventType[e.type] !== 1) {
+        let button
+        if (!e.which) { button = (e.button < 2) ? 0 : ((e.button === 4) ? 1 : 2) }
+        else { button = e.button }
+        if (button !== 0) { return }
       }
-
-      if (!this.enabled || (this.initiated && utils.eventType[e.type] !== this.initiated)) {
-        return
-      }
-
-      if (this.options.preventDefault && !utils.isBadAndroid && !utils.preventDefaultException(e.target, this.options.preventDefaultException)) {
-        e.preventDefault()
-      }
-
-      let point = e.touches ? e.touches[0] : e,
-        pos
-
+      if (!this.enabled || (this.initiated && utils.eventType[e.type] !== this.initiated)) { return }
+      if (this.options.preventDefault && !utils.isBadAndroid && !utils.preventDefaultException(e.target, this.options.preventDefaultException)) { e.preventDefault() }
+      const point = e.touches ? e.touches[0] : e
+      let pos
       this.initiated	= utils.eventType[e.type]
       this.moved		= false
       this.distX		= 0
@@ -505,9 +413,7 @@
       this.directionX = 0
       this.directionY = 0
       this.directionLocked = 0
-
       this.startTime = utils.getTime()
-
       if (this.options.useTransition && this.isInTransition) {
         this._transitionTime()
         this.isInTransition = false
@@ -519,7 +425,6 @@
         this.isAnimating = false
         this._execEvent('scrollEnd')
       }
-
       this.startX = this.x
       this.startY = this.y
       this.absStartX = this.x
@@ -527,6 +432,8 @@
       this.pointX = point.pageX
       this.pointY = point.pageY
 
+      e.stopPropagation()
+      if (e.target.QUI) { e.target.QUI.start(e) }
       this._execEvent('beforeScrollStart')
     },
 
@@ -539,20 +446,22 @@
         e.preventDefault()
       }
 
-      let point		= e.touches ? e.touches[0] : e,
-        deltaX		= point.pageX - this.pointX,
-        deltaY		= point.pageY - this.pointY,
-        timestamp	= utils.getTime(),
-        newX, newY,
-        absDistX, absDistY
+      const point		= e.touches ? e.touches[0] : e
+      let deltaX		= point.pageX - this.pointX
+      let deltaY		= point.pageY - this.pointY
+      const timestamp	= utils.getTime()
+      let newX
+      let newY
+      // let absDistX
+      // let absDistY
 
       this.pointX		= point.pageX
       this.pointY		= point.pageY
 
       this.distX		+= deltaX
       this.distY		+= deltaY
-      absDistX		= Math.abs(this.distX)
-      absDistY		= Math.abs(this.distY)
+      const absDistX		= Math.abs(this.distX)
+      const absDistY		= Math.abs(this.distY)
 
       // We need to move at least 10 pixels for the scrolling to initiate
       if (timestamp - this.endTime > 300 && (absDistX < 10 && absDistY < 10)) {
@@ -572,22 +481,22 @@
         }
       }
 
-      if (this.directionLocked == 'h') {
-        if (this.options.eventPassthrough == 'vertical') {
+      if (this.directionLocked === 'h') {
+        if (this.options.eventPassthrough === 'vertical') {
           e.preventDefault()
         }
-        else if (this.options.eventPassthrough == 'horizontal') {
+        else if (this.options.eventPassthrough === 'horizontal') {
           this.initiated = false
           return
         }
 
         deltaY = 0
       }
-      else if (this.directionLocked == 'v') {
-        if (this.options.eventPassthrough == 'horizontal') {
+      else if (this.directionLocked === 'v') {
+        if (this.options.eventPassthrough === 'horizontal') {
           e.preventDefault()
         }
-        else if (this.options.eventPassthrough == 'vertical') {
+        else if (this.options.eventPassthrough === 'vertical') {
           this.initiated = false
           return
         }
@@ -597,15 +506,14 @@
 
       // deltaX = this.hasHorizontalScroll ? deltaX : 0
 
-      if(this.options.mustScroll){
+      if (this.options.mustScroll) {
         deltaX = this.hasHorizontalScroll ? deltaX : 0
         deltaY = this.options.bounce ? deltaY : 0
       }
       else {
         deltaX = this.hasHorizontalScroll ? deltaX : 0
-        deltaY = this.hasVerticalScroll ? deltaY : 0;
+        deltaY = this.hasVerticalScroll ? deltaY : 0
       }
-
 
       newX = this.x + deltaX
       newY = this.y + deltaY
@@ -635,7 +543,7 @@
         this.startX = this.x
         this.startY = this.y
 
-        if (this.options.probeType == 1) {
+        if (this.options.probeType === 1) {
           this._execEvent('scroll')
         }
       }
@@ -644,6 +552,7 @@
         this._execEvent('scroll')
       }
       /* REPLACE END: _move */
+      if (e.target.QUI) { e.target.QUI.move(e) }
     },
 
     _end: function (e) {
@@ -655,16 +564,16 @@
         e.preventDefault()
       }
 
-      let point = e.changedTouches ? e.changedTouches[0] : e,
-        momentumX,
-        momentumY,
-        duration = utils.getTime() - this.startTime,
-        newX = Math.round(this.x),
-        newY = Math.round(this.y),
-        distanceX = Math.abs(newX - this.startX),
-        distanceY = Math.abs(newY - this.startY),
-        time = 0,
-        easing = ''
+      // const point = e.changedTouches ? e.changedTouches[0] : e
+      let momentumX
+      let momentumY
+      const duration = utils.getTime() - this.startTime
+      let newX = Math.round(this.x)
+      let newY = Math.round(this.y)
+      const distanceX = Math.abs(newX - this.startX)
+      const distanceY = Math.abs(newY - this.startY)
+      let time = 0
+      let easing = ''
 
       this.isInTransition = 0
       this.initiated = 0
@@ -724,7 +633,7 @@
 
       // INSERT POINT: _end
 
-      if (newX != this.x || newY != this.y) {
+      if (newX !== this.x || newY !== this.y) {
         // change easing function when scroller goes out of the boundaries
         if (newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY) {
           easing = utils.ease.quadratic
@@ -735,6 +644,7 @@
       }
 
       this._execEvent('scrollEnd')
+      if (e.target.QUI) { e.target.QUI.end(e) }
     },
 
     _resize: function () {
@@ -748,8 +658,8 @@
     },
 
     resetPosition: function (time) {
-      let x = this.x,
-        y = this.y
+      let x = this.x
+      let y = this.y
 
       time = time || 0
 
@@ -767,7 +677,7 @@
         y = this.maxScrollY
       }
 
-      if (x == this.x && y == this.y) {
+      if (x === this.x && y === this.y) {
         return false
       }
 
@@ -838,40 +748,22 @@
     },
 
     on: function (type, fn) {
-      if (!this._events[type]) {
-        this._events[type] = []
-      }
-
+      if (!this._events[type]) { this._events[type] = [] }
       this._events[type].push(fn)
     },
 
     off: function (type, fn) {
-      if (!this._events[type]) {
-        return
-      }
-
+      if (!this._events[type]) { return }
       const index = this._events[type].indexOf(fn)
-
-      if (index > -1) {
-        this._events[type].splice(index, 1)
-      }
+      if (index > -1) { this._events[type].splice(index, 1) }
     },
 
     _execEvent: function (type) {
-      if (!this._events[type]) {
-        return
-      }
-
-      let i = 0,
-        l = this._events[type].length
-
-      if (!l) {
-        return
-      }
-
-      for (; i < l; i++) {
-        this._events[type][i].apply(this, [].slice.call(arguments, 1))
-      }
+      if (!this._events[type]) { return }
+      let i = 0
+      const l = this._events[type].length
+      if (!l) { return }
+      for (; i < l; i++) { this._events[type][i].apply(this, [].slice.call(arguments, 1)) }
     },
 
     scrollBy: function (x, y, time, easing) {
@@ -1007,36 +899,15 @@
     },
 
     _initEvents: function (remove) {
-      let eventType = remove ? utils.removeEvent : utils.addEvent,
-        target = this.options.bindToWrapper ? this.wrapper : window
-
+      const eventType = remove ? utils.removeEvent : utils.addEvent
+      const target = this.options.bindToWrapper ? this.wrapper : window
       eventType(window, 'orientationchange', this)
       eventType(window, 'resize', this)
-
-      if (this.options.click) {
-        eventType(this.wrapper, 'click', this, true)
-      }
-
-      if (!this.options.disableMouse) {
-        eventType(this.wrapper, 'mousedown', this)
-        eventType(target, 'mousemove', this)
-        eventType(target, 'mousecancel', this)
-        eventType(target, 'mouseup', this)
-      }
-
-      if (utils.hasPointer && !this.options.disablePointer) {
-        eventType(this.wrapper, utils.prefixPointerEvent('pointerdown'), this)
-        eventType(target, utils.prefixPointerEvent('pointermove'), this)
-        eventType(target, utils.prefixPointerEvent('pointercancel'), this)
-        eventType(target, utils.prefixPointerEvent('pointerup'), this)
-      }
-
-      if (utils.hasTouch && !this.options.disableTouch) {
-        eventType(this.wrapper, 'touchstart', this)
-        eventType(target, 'touchmove', this)
-        eventType(target, 'touchcancel', this)
-        eventType(target, 'touchend', this)
-      }
+      // if (this.options.click) { eventType(this.wrapper, 'click', this, true) }
+      eventType(this.wrapper, 'touchstart', this)
+      eventType(target, 'touchmove', this)
+      eventType(target, 'touchcancel', this)
+      eventType(target, 'touchend', this)
 
       eventType(this.scroller, 'transitionend', this)
       eventType(this.scroller, 'webkitTransitionEnd', this)
@@ -1045,8 +916,9 @@
     },
 
     getComputedPosition: function () {
-      let matrix = window.getComputedStyle(this.scroller, null),
-        x, y
+      let matrix = window.getComputedStyle(this.scroller, null)
+      let x
+      let y
 
       if (this.options.useTransform) {
         matrix = matrix[utils.style.transform].split(')')[0].split(', ')
@@ -1061,10 +933,10 @@
       return { x: x, y: y }
     },
     _initIndicators: function () {
-      let interactive = this.options.interactiveScrollbars,
-        customStyle = typeof this.options.scrollbars !== 'string',
-        indicators = [],
-        indicator
+      const interactive = this.options.interactiveScrollbars
+      const customStyle = typeof this.options.scrollbars !== 'string'
+      let indicators = []
+      let indicator
 
       const that = this
 
@@ -1186,9 +1058,10 @@
 
       e.preventDefault()
 
-      let wheelDeltaX, wheelDeltaY,
-        newX, newY,
-        that = this
+      let wheelDeltaX, wheelDeltaY
+      let newX
+      let newY
+      const that = this
 
       if (this.wheelTimeout === undefined) {
         that._execEvent('scrollStart')
@@ -1295,14 +1168,18 @@
       }
 
       this.on('refresh', function () {
-        let i = 0, l,
-          m = 0, n,
-          cx, cy,
-          x = 0, y,
-          stepX = this.options.snapStepX || this.wrapperWidth,
-          stepY = this.options.snapStepY || this.wrapperHeight,
-          el,
-          rect
+        let i = 0
+        let l
+        let m = 0
+        let n
+        let cx
+        let cy
+        let x = 0
+        let y
+        const stepX = this.options.snapStepX || this.wrapperWidth
+        const stepY = this.options.snapStepY || this.wrapperHeight
+        let el
+        let rect
 
         this.pages = []
 
@@ -1406,9 +1283,9 @@
         return { x: 0, y: 0, pageX: 0, pageY: 0 }
       }
 
-      let i = 0,
-        l = this.pages.length,
-        m = 0
+      let i = 0
+      let l = this.pages.length
+      let m = 0
 
       // Check if we exceeded the snap threshold
       if (Math.abs(x - this.absStartX) < this.snapThresholdX &&
@@ -1446,7 +1323,7 @@
         }
       }
 
-      if (i == this.currentPage.pageX) {
+      if (i === this.currentPage.pageX) {
         i += this.directionX
 
         if (i < 0) {
@@ -1459,7 +1336,7 @@
         x = this.pages[i][0].x
       }
 
-      if (m == this.currentPage.pageY) {
+      if (m === this.currentPage.pageY) {
         m += this.directionY
 
         if (m < 0) {
@@ -1497,8 +1374,8 @@
         y = 0
       }
 
-      let posX = this.pages[x][y].x,
-        posY = this.pages[x][y].y
+      const posX = this.pages[x][y].x
+      const posY = this.pages[x][y].y
 
       time = time === undefined ? this.options.snapSpeed || Math.max(
         Math.max(
@@ -1517,8 +1394,8 @@
     },
 
     next: function (time, easing) {
-      let x = this.currentPage.pageX,
-        y = this.currentPage.pageY
+      let x = this.currentPage.pageX
+      let y = this.currentPage.pageY
 
       x++
 
@@ -1531,8 +1408,8 @@
     },
 
     prev: function (time, easing) {
-      let x = this.currentPage.pageX,
-        y = this.currentPage.pageY
+      let x = this.currentPage.pageX
+      let y = this.currentPage.pageY
 
       x--
 
@@ -1586,13 +1463,13 @@
         return
       }
 
-      let snap = this.options.snap,	// we are using this alot, better to cache it
-        newX = snap ? this.currentPage.pageX : this.x,
-        newY = snap ? this.currentPage.pageY : this.y,
-        now = utils.getTime(),
-        prevTime = this.keyTime || 0,
-        acceleration = 0.250,
-        pos
+      const snap = this.options.snap
+      let newX = snap ? this.currentPage.pageX : this.x
+      let newY = snap ? this.currentPage.pageY : this.y
+      const now = utils.getTime()
+      const prevTime = this.keyTime || 0
+      const acceleration = 0.250
+      let pos
 
       if (this.options.useTransition && this.isInTransition) {
         pos = this.getComputedPosition()
@@ -1673,16 +1550,17 @@
     },
 
     _animate: function (destX, destY, duration, easingFn) {
-      let that = this,
-        startX = this.x,
-        startY = this.y,
-        startTime = utils.getTime(),
-        destTime = startTime + duration
+      const that = this
+      const startX = this.x
+      const startY = this.y
+      const startTime = utils.getTime()
+      const destTime = startTime + duration
 
       function step () {
-        let now = utils.getTime(),
-          newX, newY,
-          easing
+        let now = utils.getTime()
+        // let newX
+        // let newY
+        // let easing
 
         if (now >= destTime) {
           that.isAnimating = false
@@ -1696,16 +1574,16 @@
         }
 
         now = (now - startTime) / duration
-        easing = easingFn(now)
-        newX = (destX - startX) * easing + startX
-        newY = (destY - startY) * easing + startY
+        const easing = easingFn(now)
+        const newX = (destX - startX) * easing + startX
+        const newY = (destY - startY) * easing + startY
         that._translate(newX, newY)
 
         if (that.isAnimating) {
           rAF(step)
         }
 
-        if (that.options.probeType == 3) {
+        if (that.options.probeType === 3) {
           that._execEvent('scroll')
         }
       }
@@ -1715,27 +1593,15 @@
     },
 
     handleEvent: function (e) {
+      //console.log(e.target.QUI)
       switch (e.type) {
         case 'touchstart':
-        case 'pointerdown':
-        case 'MSPointerDown':
-        case 'mousedown':
           this._start(e)
           break
         case 'touchmove':
-        case 'pointermove':
-        case 'MSPointerMove':
-        case 'mousemove':
           this._move(e)
           break
         case 'touchend':
-        case 'pointerup':
-        case 'MSPointerUp':
-        case 'mouseup':
-        case 'touchcancel':
-        case 'pointercancel':
-        case 'MSPointerCancel':
-        case 'mousecancel':
           this._end(e)
           break
         case 'orientationchange':
@@ -1748,26 +1614,24 @@
         case 'MSTransitionEnd':
           this._transitionEnd(e)
           break
-        case 'wheel':
-        case 'DOMMouseScroll':
-        case 'mousewheel':
-          this._wheel(e)
-          break
-        case 'keydown':
-          this._key(e)
-          break
-        case 'click':
-          if (this.enabled && !e._constructed) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-          break
+        // case 'wheel':
+        //   this._wheel(e)
+        //   break
+        // case 'keydown':
+        //   this._key(e)
+        //   break
+        // case 'click':
+        //   if (this.enabled && !e._constructed) {
+        //     e.preventDefault()
+        //     e.stopPropagation()
+        //   }
+        //   break
       }
     }
   }
   function createDefaultScrollbar (direction, interactive, type) {
-    let scrollbar = document.createElement('div'),
-      indicator = document.createElement('div')
+    const scrollbar = document.createElement('div')
+    const indicator = document.createElement('div')
 
     if (type === true) {
       scrollbar.style.cssText = 'position:absolute;z-index:9999'
@@ -1776,7 +1640,7 @@
 
     indicator.className = 'iScrollIndicator'
 
-    if (direction == 'h') {
+    if (direction === 'h') {
       if (type === true) {
         scrollbar.style.cssText += ';height:7px;left:2px;right:2px;bottom:0'
         indicator.style.height = '100%'
@@ -1945,10 +1809,12 @@
     },
 
     _move: function (e) {
-      let point = e.touches ? e.touches[0] : e,
-        deltaX, deltaY,
-        newX, newY,
-        timestamp = utils.getTime()
+      const point = e.touches ? e.touches[0] : e
+      // let deltaX
+      // let deltaY
+      // let newX
+      // let newY
+      const timestamp = utils.getTime()
 
       if (!this.moved) {
         this.scroller._execEvent('scrollStart')
@@ -1956,18 +1822,18 @@
 
       this.moved = true
 
-      deltaX = point.pageX - this.lastPointX
+      const deltaX = point.pageX - this.lastPointX
       this.lastPointX = point.pageX
 
-      deltaY = point.pageY - this.lastPointY
+      const deltaY = point.pageY - this.lastPointY
       this.lastPointY = point.pageY
 
-      newX = this.x + deltaX
-      newY = this.y + deltaY
+      const newX = this.x + deltaX
+      const newY = this.y + deltaY
 
       this._pos(newX, newY)
 
-      if (this.scroller.options.probeType == 1 && timestamp - this.startTime > 300) {
+      if (this.scroller.options.probeType === 1 && timestamp - this.startTime > 300) {
         this.startTime = timestamp
         this.scroller._execEvent('scroll')
       }
@@ -2004,7 +1870,7 @@
             Math.min(Math.abs(this.scroller.y - snap.y), 1000)
           ), 300)
 
-        if (this.scroller.x != snap.x || this.scroller.y != snap.y) {
+        if (this.scroller.x !== snap.x || this.scroller.y !== snap.y) {
           this.scroller.directionX = 0
           this.scroller.directionY = 0
           this.scroller.currentPage = snap
@@ -2096,7 +1962,7 @@
 
         this.maxPosX = this.wrapperWidth - this.indicatorWidth
 
-        if (this.options.shrink == 'clip') {
+        if (this.options.shrink === 'clip') {
           this.minBoundaryX = -this.indicatorWidth + 8
           this.maxBoundaryX = this.wrapperWidth - 8
         }
@@ -2120,7 +1986,7 @@
 
         this.maxPosY = this.wrapperHeight - this.indicatorHeight
 
-        if (this.options.shrink == 'clip') {
+        if (this.options.shrink === 'clip') {
           this.minBoundaryY = -this.indicatorHeight + 8
           this.maxBoundaryY = this.wrapperHeight - 8
         }
@@ -2137,19 +2003,19 @@
     },
 
     updatePosition: function () {
-      let x = this.options.listenX && Math.round(this.sizeRatioX * this.scroller.x) || 0,
-        y = this.options.listenY && Math.round(this.sizeRatioY * this.scroller.y) || 0
+      let x = this.options.listenX && Math.round(this.sizeRatioX * this.scroller.x) || 0
+      let y = this.options.listenY && Math.round(this.sizeRatioY * this.scroller.y) || 0
 
       if (!this.options.ignoreBoundaries) {
         if (x < this.minBoundaryX) {
-          if (this.options.shrink == 'scale') {
+          if (this.options.shrink === 'scale') {
             this.width = Math.max(this.indicatorWidth + x, 8)
             this.indicatorStyle.width = this.width + 'px'
           }
           x = this.minBoundaryX
         }
         else if (x > this.maxBoundaryX) {
-          if (this.options.shrink == 'scale') {
+          if (this.options.shrink === 'scale') {
             this.width = Math.max(this.indicatorWidth - (x - this.maxPosX), 8)
             this.indicatorStyle.width = this.width + 'px'
             x = this.maxPosX + this.indicatorWidth - this.width
@@ -2158,20 +2024,20 @@
             x = this.maxBoundaryX
           }
         }
-        else if (this.options.shrink == 'scale' && this.width != this.indicatorWidth) {
+        else if (this.options.shrink === 'scale' && this.width !== this.indicatorWidth) {
           this.width = this.indicatorWidth
           this.indicatorStyle.width = this.width + 'px'
         }
 
         if (y < this.minBoundaryY) {
-          if (this.options.shrink == 'scale') {
+          if (this.options.shrink === 'scale') {
             this.height = Math.max(this.indicatorHeight + y * 3, 8)
             this.indicatorStyle.height = this.height + 'px'
           }
           y = this.minBoundaryY
         }
         else if (y > this.maxBoundaryY) {
-          if (this.options.shrink == 'scale') {
+          if (this.options.shrink === 'scale') {
             this.height = Math.max(this.indicatorHeight - (y - this.maxPosY) * 3, 8)
             this.indicatorStyle.height = this.height + 'px'
             y = this.maxPosY + this.indicatorHeight - this.height
@@ -2180,7 +2046,7 @@
             y = this.maxBoundaryY
           }
         }
-        else if (this.options.shrink == 'scale' && this.height != this.indicatorHeight) {
+        else if (this.options.shrink === 'scale' && this.height !== this.indicatorHeight) {
           this.height = this.indicatorHeight
           this.indicatorStyle.height = this.height + 'px'
         }
@@ -2227,8 +2093,8 @@
       clearTimeout(this.fadeTimeout)
       this.fadeTimeout = null
 
-      let time = val ? 250 : 500,
-        delay = val ? 0 : 300
+      const time = val ? 250 : 500
+      const delay = val ? 0 : 300
 
       val = val ? '1' : '0'
 

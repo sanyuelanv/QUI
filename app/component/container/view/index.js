@@ -37,6 +37,7 @@ class View extends React.Component {
     tapStopPropagation: false,
     id: null
   }
+  viewRef = null
   tapFlag = false // 用于记录是否tap了（出现touchmove 行为则不为tap）
   tapTouchPos = { x: 0, y: 0 }
   _touchStart = this._touchStart.bind(this)
@@ -52,6 +53,17 @@ class View extends React.Component {
     super(props)
     this._setPropFunc()
   }
+  componentDidMount () {
+    if (this.props.getRef) { this.props.getRef(this.viewRef) }
+    if (this.props.tap) {
+      this.viewRef.QUI = {
+        start: this._touchStart,
+        move: this._touchMove,
+        end: this._touchEnd,
+        cancel: this._touchCancel
+      }
+    }
+  }
   _setPropFunc () {
     if (!this.props.touchStart && !this.props.tap) { this._touchStart = null }
     if (!this.props.touchMove && !this.props.tap) { this._touchMove = null }
@@ -66,25 +78,25 @@ class View extends React.Component {
   _touchStart (e) {
     if (this.props.tap) {
       this.tapFlag = true
-      const { screenX, screenY } = e.nativeEvent.touches[0]
+      const { screenX, screenY } = e.touches[0]
       this.tapTouchPos = { x: screenX, y: screenY }
       if (this.props.tapStopPropagation) {
         e.preventDefault()
         e.stopPropagation()
       }
     }
-    if (this.props.touchStart) { this.props.touchStart(e.nativeEvent) }
+    if (this.props.touchStart) { this.props.touchStart(e) }
   }
   _touchMove (e) {
     if (this.props.tap) {
-      const { screenX, screenY } = e.nativeEvent.touches[0]
-      if (screenX !== this.tapTouchPos.x || screenY !== this.tapTouchPos.y) { this.tapFlag = false }
+      const { screenX, screenY } = e.touches[0]
+      if (Math.abs(screenX - this.tapTouchPos.x) > 1 || Math.abs(screenY - this.tapTouchPos.y) > 1) { this.tapFlag = false }
       if (this.props.tapStopPropagation) {
         e.preventDefault()
         e.stopPropagation()
       }
     }
-    if (this.props.touchMove) { this.props.touchMove(e.nativeEvent) }
+    if (this.props.touchMove) { this.props.touchMove(e) }
   }
   _touchEnd (e) {
     if (this.props.tap && this.tapFlag) {
@@ -94,7 +106,7 @@ class View extends React.Component {
       }
       this.props.tap()
     }
-    if (this.props.touchEnd) { this.props.touchEnd(e.nativeEvent) }
+    if (this.props.touchEnd) { this.props.touchEnd(e) }
   }
   _touchCancel (e) {
     if (this.props.tap && this.tapFlag) {
@@ -104,7 +116,7 @@ class View extends React.Component {
         e.stopPropagation()
       }
     }
-    if (this.props.touchCancel) { this.props.touchCancel(e.nativeEvent) }
+    if (this.props.touchCancel) { this.props.touchCancel(e) }
   }
   _transitionEnd (e) { if (this.props.transitionEnd) { this.props.transitionEnd(e) } }
   _animationStart (e) { if (this.props.animationStart) { this.props.animationStart(e) } }
@@ -126,7 +138,7 @@ class View extends React.Component {
         onAnimationIteration = {this._animationIteration}
         onAnimationEnd = {this._animationEnd}
         onContextMenu = {this._contextMenu}
-        ref={this.props.getRef}
+        ref={(res) => { this.viewRef = res }}
       >{ this.props.children }</div>
     )
   }
