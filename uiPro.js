@@ -6,9 +6,10 @@ module.exports = {
   entry: path.resolve(__dirname, 'app/component/index.js'),
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'QUI.js',
+    filename: 'index.js',
     library: 'QUI',
-    libraryTarget: 'window'
+    // libraryTarget: 'window'
+    libraryTarget: 'umd'
   },
   mode: 'production',
   // 4.0 之后分代码
@@ -41,7 +42,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader?minimize=true&modules&localIdentName=_[local]_[hash:base64:5]',
+          'css-loader?minimize=true&modules&localIdentName=_qui_[local]_[hash:base64:5]',
           { loader: 'postcss-loader',
             options: {
               ident: 'postcss',

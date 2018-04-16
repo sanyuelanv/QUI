@@ -1,7 +1,7 @@
 {
   "name": "sanyuequi",
   "sideEffects": false,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "babel": {
     "presets": [
       "env",
@@ -357,7 +357,7 @@
     ]
   },
   "description": "",
-  "main": "build/QUI.js",
+  "main": "build/index.js",
   "scripts": {
     "dep": "webpack --progress --config production.js",
     "ui": "webpack --progress --config uiPro.js",
