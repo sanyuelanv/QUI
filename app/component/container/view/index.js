@@ -16,7 +16,8 @@ class View extends React.Component {
     animationEnd: PropTypes.func,
     contextMenu: PropTypes.func,
     getRef: PropTypes.func,
-    id: PropTypes.string
+    id: PropTypes.string,
+    tapStopPropagation: PropTypes.bool
   }
   static defaultProps = {
     children: null,
@@ -33,6 +34,7 @@ class View extends React.Component {
     animationEnd: null,
     contextMenu: null,
     getRef: null,
+    tapStopPropagation: false,
     id: null
   }
   tapFlag = false // 用于记录是否tap了（出现touchmove 行为则不为tap）
@@ -66,6 +68,10 @@ class View extends React.Component {
       this.tapFlag = true
       const { screenX, screenY } = e.nativeEvent.touches[0]
       this.tapTouchPos = { x: screenX, y: screenY }
+      if (this.props.tapStopPropagation) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     }
     if (this.props.touchStart) { this.props.touchStart(e.nativeEvent) }
   }
@@ -73,15 +79,31 @@ class View extends React.Component {
     if (this.props.tap) {
       const { screenX, screenY } = e.nativeEvent.touches[0]
       if (screenX !== this.tapTouchPos.x || screenY !== this.tapTouchPos.y) { this.tapFlag = false }
+      if (this.props.tapStopPropagation) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
     }
     if (this.props.touchMove) { this.props.touchMove(e.nativeEvent) }
   }
   _touchEnd (e) {
-    if (this.props.tap && this.tapFlag) { this.props.tap() }
+    if (this.props.tap && this.tapFlag) {
+      if (this.props.tapStopPropagation) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+      this.props.tap()
+    }
     if (this.props.touchEnd) { this.props.touchEnd(e.nativeEvent) }
   }
   _touchCancel (e) {
-    if (this.props.tap && this.tapFlag) { this.tapFlag = false }
+    if (this.props.tap && this.tapFlag) {
+      this.tapFlag = false
+      if (this.props.tapStopPropagation) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
     if (this.props.touchCancel) { this.props.touchCancel(e.nativeEvent) }
   }
   _transitionEnd (e) { if (this.props.transitionEnd) { this.props.transitionEnd(e) } }

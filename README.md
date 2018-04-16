@@ -36,6 +36,7 @@
 | animationEnd| func |  null |  CSS 动画结束事件 |否 |
 | getRef | func | null | 获取DOM节点 | 否 |
 | contextMenu | func | null | 上下文菜单事件 |否 |
+| tapStopPropagation | bool | false | 防止tap事件穿透 | 否 |
 
   
 ## App组件
