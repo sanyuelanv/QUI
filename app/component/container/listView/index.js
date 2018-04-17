@@ -20,7 +20,8 @@ class ListView extends React.Component {
     layoutClassName: PropTypes.string,
     Header: PropTypes.any,
     headerProp: PropTypes.object,
-    itemProp: PropTypes.object
+    itemProp: PropTypes.object,
+    scroll: PropTypes.func
   }
   static defaultProps = {
     topRefreshControl: {
@@ -161,6 +162,7 @@ class ListView extends React.Component {
         }
       }
     }
+    if (this.props.scroll) { this.props.scroll() }
   }
   _renderTopRefreshControl () {
     if (this.props.topRefresh) {
@@ -187,7 +189,6 @@ class ListView extends React.Component {
         bounce={true}
         direction={'column'}
         scroll={this._scroll}
-        scrollCancel={this._scrollEnd}
         onTouchEnd = {this._onTouchEnd}
         renderTopRefreshControl = {this._renderTopRefreshControl}
         getIScroll= {(res) => { this.iScroll = res }}
