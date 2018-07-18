@@ -5,6 +5,7 @@ import ScrollView from './container/scrollView'
 import ListView from './container/listView'
 import LoadIcon from './base/icon/loadIcon'
 import Button from './base/button'
+import Img from './base/image'
 export {
   App,
   View,
@@ -12,5 +13,6 @@ export {
   Button,
   LoadIcon,
   ScrollView,
-  ListView
+  ListView,
+  Img
 }

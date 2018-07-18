@@ -14,7 +14,8 @@ class App extends React.Component {
     children: null,
     noSysScroll: true
   }
-  componentWillMount () {
+  constructor (props) {
+    super(props)
     // APP 初始化就禁止document的默认事件
     if (this.props.noSysScroll) { scrollSetting() }
     window.Qapp = {

@@ -84,7 +84,7 @@ class ScrollView extends React.Component {
       scrollY = false
     }
     const config = {
-      useTransition: true,
+      // useTransition: true,
       click: false,
       tap: true,
       fadeScrollbars: true,
@@ -98,7 +98,7 @@ class ScrollView extends React.Component {
       mustScroll
     }
     if (device === 'android') {
-      config.useTransition = true
+      // config.useTransition = true
       // config.bounce = bounce
       // config.disableMouse = true
       // config.disablePointer = true

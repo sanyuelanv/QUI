@@ -5,7 +5,7 @@
       "template":"index"
     }
   ],
-  "consoleConfig":true,
+  "consoleConfig":false,
   "netWork":{
     "port":"8080"
   }
