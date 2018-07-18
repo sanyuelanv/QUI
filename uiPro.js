@@ -50,7 +50,7 @@ module.exports = {
             }
           }],
         include: [path.resolve(__dirname, 'app')],
-        exclude: [nodeModuleDir]
+        exclude: [nodeModuleDir, path.resolve(__dirname, 'app/component/container/swiper')]
       }
     ]
   }

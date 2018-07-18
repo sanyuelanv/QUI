@@ -1,26 +1,55 @@
 'use strict'
-import { Text, View, Button, ScrollView, Img } from '../../component/index'
+import { Text, View, Button, ScrollView, Img, utils } from '../../component/index'
 import style from './css.css'
 class Index extends React.Component {
   state = {
     image: {
-      src: 'https://im5.ezgif.com/tmp/ezgif-5-8eb446af35.jpg',
-      webp: 'https://im5.ezgif.com/tmp/ezgif-5-5b539feade.webp'
-    }
+      src: 'https://static.haodan123.com/static/test.jpg',
+      webp: 'https://static.haodan123.com/static/test.webp'
+    },
+    text: 123121
   }
   componentDidMount () {
     setTimeout(() => {
-      const image = {
-        src: 'https://im5.ezgif.com/tmp/ezgif-5-c1196f7e82.jpg',
-        webp: 'https://im5.ezgif.com/tmp/ezgif-5-c50dd27c86.webp'
-      }
-      this.setState({ image })
+      const text = 'dsadsa'
+      this.setState({ text })
     }, 3000)
   }
   render () {
     return (
       <ScrollView className={ style.container } mustScroll={true}>
-        <Text copy={(text) => { console.log(text) }} className={style.textBox} copy={(value) => { window.Qapp.showToast({ content: `复制${value}成功` }) }}>122131</Text>
+        <Button tap={() => {
+          window.Qapp.copy.setCopy({
+            text: '复制',
+            success: (text) => {
+              console.log(`复制${text}成功`)
+            },
+            error: (text) => {
+              console.log(`复制${text}失败`)
+            }
+          })
+        }}>复制</Button>
+        <Button tap={() => {
+          window.Qapp.copy.setCopy({
+            text: '复制2',
+            success: (text) => {
+              console.log(`复制${text}成功`)
+            },
+            error: (text) => {
+              console.log(`复制${text}失败`)
+            }
+          })
+        }}>复制2</Button>
+        <Text
+          copy = {true}
+          className={style.textBox}
+          success={(value) => { window.Qapp.showToast({ content: `复制${value}成功` }) }}
+        >{ this.state.text }</Text>
+        <Img
+          className={style.image}
+          webp ={this.state.image.webp}
+          src ={this.state.image.src}
+        />
         <Img
           className={style.image}
           webp ={this.state.image.webp}

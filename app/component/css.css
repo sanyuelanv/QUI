@@ -292,6 +292,16 @@ li {
   font-size: 24rpx;
   margin-top: 25rpx;
 }
+/* copy */
+.copy{
+  position: absolute;
+  left: -2000px;
+  top: -2000px;
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+  opacity: 0;
+}
 
 /* scrollView组件 */
 

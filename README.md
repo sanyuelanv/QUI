@@ -11,6 +11,7 @@ import {
   Button,
   LoadIcon,
   ScrollView,
+  Img,
   ListView } from 'sanyuequi'
 ```
 
@@ -97,6 +98,15 @@ import {
 | rightButton | object | {event: null,name: '确认',color: '#09BB07'} | 右边按钮 |否|
 | leftButton | object | null | 左边按钮 |否|
 
+#### 3. copy 函数（copy function)
+由 ``` window.Qapp.copy(object)``` 来把指定的字符设置进剪切板中。其中 ```object``` 的属性主要是：
+| 名字 | 值类型 | 默认值  | 说明 |  是否必需 |
+|---------|---------|--------- |---------|---------|
+| text | string  | "" | 需要复制的文字 | 是|
+| success | func | null | 成功回调，第一个参数是当前需要复制字符串 |否|
+| error | func | null | 失败回调，第一个参数是当前需要复制字符串 |否|
+
+
 ## ScrollView组件
 ----
 该组件是为了更好的滚动而存在的，在使用它之前请确认根组件是 ```noSysScroll:true``` 的 ```App``` 组件。  
@@ -139,16 +149,18 @@ import {
 | layoutClassName | string | null | 列表层样式类名 | 否 |
 | className | string | null | 滚动层样式类名 | 否 |
 
-### Text组件
+## Text组件
 ----
-```Text``` 和 ```View``` 很像，但是它点击能复制当前标签内的值，只是用于文字的展示，而且也不能嵌套使用。但如果需要长按复制的文字，就使用 ```Text``` 标签。（注：部分安卓浏览器无法禁止长按复制文字）
+```Text``` 和 ```View``` 很像，但是它点击能复制当前标签内的值，只是用于文字的展示，而且也不能嵌套使用。但如果需要点击复制的文字，就使用 ```Text``` 标签。（注：部分安卓浏览器无法禁止长按复制文字）
 ### Prop
 ----
 | 参数名字 | 值类型 | 默认值  | 说明 |  是否必需 |
 |---------|---------|--------- |---------|---------|
-| copy| func | null | 复制回调 | 点击当前标签复制当前标签的值，参数带上当前复制值 |
+| success| func | null | 复制回调 | 点击当前标签复制当前标签的值，参数带上当前复制值 |
+| err| func | null | 失败回调 | 参数带上当前复制值 |
+| copy| bool | null | false | 是否启动点击复制 |
 
-### Button组件
+## Button组件
 ----
 继承自 ```View``` 组件，为了方便点击时候样式切换而存在的。  
 
@@ -158,13 +170,37 @@ import {
 |---------|---------|--------- |---------|---------|
 | tapClassName| string | null | 点击时候样式 | 否 |
 
+## Img组件
+----
+图片组件
+
+### Prop
+----
+| 参数名字 | 值类型 | 默认值  | 说明 |  是否必需 |
+|---------|---------|--------- |---------|---------|
+| src| string | null | 图片路径 | 否 |
+| webp| string | null | 图片webp格式路径 | 否 |
+| size| enum | 0 | 图片尺寸 | 0:宽度100%，高度自由；1:高度100%，宽度自由；2:contain；3:covor  |
+| postion| enum | 0 | 图片尺寸 | 0:CC;1:CL;2:CR;3:TC;4:TL;5:TR;6:BC;7.BL;8:BR  |
+*C: center ; L: left ; R: right*
+
+
+## utils
+----
+工具箱
+### loadImage
+```javascript
+const res = await loadImage(src) // success:true &  error: false
+```
+### supportWebp
+```javascript
+const res = await supportWebp(src) // success:true &  error: false
+```
 
 # 例子
 1. 每个组件的简单使用
 3. ```ScrollView``` 的几种排列样式
-4. 传统多页面开发
-5. 单页面开发
+3. ```ListView``` 的几种排列样式
 
 # todo
 1. Swiper
-2. Image
