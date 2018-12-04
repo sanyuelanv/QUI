@@ -425,6 +425,9 @@
         this.isAnimating = false
         this._execEvent('scrollEnd')
       }
+      else {
+        if (e.target.QUI) { e.target.QUI.start(e) }
+      }
       this.startX = this.x
       this.startY = this.y
       this.absStartX = this.x
@@ -433,7 +436,6 @@
       this.pointY = point.pageY
 
       e.stopPropagation()
-      if (e.target.QUI) { e.target.QUI.start(e) }
       this._execEvent('beforeScrollStart')
     },
 
@@ -441,7 +443,6 @@
       if (!this.enabled || utils.eventType[e.type] !== this.initiated) {
         return
       }
-
       if (this.options.preventDefault) {	// increases performance on Android? TODO: check!
         e.preventDefault()
       }
@@ -556,6 +557,7 @@
     },
 
     _end: function (e) {
+      // console.log(e.target)
       if (!this.enabled || utils.eventType[e.type] !== this.initiated) {
         return
       }
@@ -644,7 +646,7 @@
       }
 
       this._execEvent('scrollEnd')
-      if (e.target.QUI) { e.target.QUI.end(e) }
+      // if (e.target.QUI) { e.target.QUI.end(e) }
     },
 
     _resize: function () {
@@ -1593,7 +1595,6 @@
     },
 
     handleEvent: function (e) {
-      //console.log(e.target.QUI)
       switch (e.type) {
         case 'touchstart':
           this._start(e)

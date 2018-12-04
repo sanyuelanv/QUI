@@ -8,8 +8,8 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: 'index.js',
     library: 'QUI',
-    // libraryTarget: 'window'
-    libraryTarget: 'umd'
+    libraryTarget: 'window'
+    // libraryTarget: 'umd'
   },
   mode: 'production',
   // 4.0 之后分代码
@@ -50,7 +50,7 @@ module.exports = {
             }
           }],
         include: [path.resolve(__dirname, 'app')],
-        exclude: [nodeModuleDir, path.resolve(__dirname, 'app/component/container/swiper')]
+        exclude: [nodeModuleDir]
       }
     ]
   }
